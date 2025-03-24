@@ -2,7 +2,7 @@ extends CharacterBody2D
 
 
 var gravity := ProjectSettings.get("physics/2d/default_gravity") as float
-@onready var sprite_2d = $Sprite2D
+@onready var graphics: Node2D = $Graphics
 @onready var animation_player = $AnimationPlayer
 @onready var coyote_timer: Timer = $CoyoteTimer
 @onready var jump_request_timer: Timer = $JumpRequestTimer
@@ -50,7 +50,7 @@ func move(delta: float) -> void:
 	velocity.y += gravity * delta
 
 	if not is_zero_approx(direction):
-		sprite_2d.flip_h = direction < 0
+		graphics.scale.x = -1 if direction < 0 else 1
 
 	move_and_slide()
 
