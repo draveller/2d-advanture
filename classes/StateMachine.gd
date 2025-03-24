@@ -1,11 +1,14 @@
 class_name StateMachine
 extends Node
 
+var state_time: float = 0.0
+
 
 var current_state: int = -1:
 	set(v):
 		owner.transition_state(current_state, v)
 		current_state = v
+		state_time = 0.0
 
 
 func _ready() -> void:
@@ -21,3 +24,4 @@ func _physics_process(delta: float) -> void:
 		current_state = next
 
 	owner.tick_physics(current_state, delta)
+	state_time += delta
