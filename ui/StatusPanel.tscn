@@ -1,0 +1,58 @@
+[gd_scene load_steps=7 format=3 uid="uid://nm3s27f1ukf4"]
+
+[ext_resource type="Script" uid="uid://det3pkg6lf4ey" path="res://ui/status_panel.gd" id="1_heylp"]
+[ext_resource type="Texture2D" uid="uid://cybwqnlxp74b2" path="res://assets/legacy_fantacy/HUD.png" id="1_lscor"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_o38l1"]
+content_margin_left = 3.0
+content_margin_top = 3.0
+content_margin_right = 3.0
+content_margin_bottom = 3.0
+texture = ExtResource("1_lscor")
+region_rect = Rect2(323, 203, 26, 26)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lscor"]
+atlas = ExtResource("1_lscor")
+region = Rect2(307, 21, 58, 6)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_heylp"]
+atlas = ExtResource("1_lscor")
+region = Rect2(308, 118, 56, 4)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o38l1"]
+atlas = ExtResource("1_lscor")
+region = Rect2(308, 86, 56, 4)
+
+[node name="StatusPanel" type="HBoxContainer"]
+script = ExtResource("1_heylp")
+
+[node name="AvatarBox" type="PanelContainer" parent="."]
+custom_minimum_size = Vector2(26, 26)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_o38l1")
+
+[node name="Avatar" type="TextureRect" parent="AvatarBox"]
+layout_mode = 2
+stretch_mode = 5
+
+[node name="HealthBar" type="TextureProgressBar" parent="."]
+layout_mode = 2
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.0
+value = 0.5
+texture_over = SubResource("AtlasTexture_lscor")
+texture_progress = SubResource("AtlasTexture_heylp")
+texture_progress_offset = Vector2(1, 1)
+
+[node name="EasedHealthBar" type="TextureProgressBar" parent="HealthBar"]
+show_behind_parent = true
+layout_mode = 2
+offset_right = 58.0
+offset_bottom = 6.0
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.0
+value = 0.5
+texture_progress = SubResource("AtlasTexture_o38l1")
+texture_progress_offset = Vector2(1, 1)

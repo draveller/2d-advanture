@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://bhsnw37cd2xk"]
+[gd_scene load_steps=28 format=3 uid="uid://bhsnw37cd2xk"]
 
 [ext_resource type="Script" uid="uid://cdw01jrdbsh28" path="res://player.gd" id="1_onrkg"]
 [ext_resource type="Texture2D" uid="uid://7uap7wyn8d4n" path="res://assets/generic_char/char_blue_1.png" id="2_i3pqv"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://chnw2dltcdjes" path="res://classes/HitBox.gd" id="4_2hs0m"]
 [ext_resource type="Texture2D" uid="uid://dgf33c1abya6x" path="res://assets/generic_char/char_blue_2.png" id="4_hqtel"]
 [ext_resource type="Script" uid="uid://dg755hi510eq" path="res://classes/Stats.gd" id="7_1jxqw"]
+[ext_resource type="PackedScene" uid="uid://nm3s27f1ukf4" path="res://ui/StatusPanel.tscn" id="8_dw050"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1jxqw"]
 size = Vector2(29.75, 16)
@@ -1841,6 +1842,10 @@ _data = {
 &"wall_sliding": SubResource("Animation_hqtel")
 }
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_dw050"]
+atlas = ExtResource("2_i3pqv")
+region = Rect2(22, 24, 11, 11)
+
 [node name="Player" type="CharacterBody2D"]
 collision_layer = 2
 script = ExtResource("1_onrkg")
@@ -1915,11 +1920,20 @@ one_shot = true
 
 [node name="Stats" type="Node" parent="."]
 script = ExtResource("7_1jxqw")
-max_health = 5
+max_health = 10
 metadata/_custom_type_script = "uid://dg755hi510eq"
 
 [node name="InvincibleTimer" type="Timer" parent="."]
 wait_time = 2.0
 one_shot = true
+
+[node name="StatusPanel" parent="." node_paths=PackedStringArray("stats") instance=ExtResource("8_dw050")]
+offset_left = -22.0
+offset_top = -52.0
+offset_right = 66.0
+offset_bottom = -26.0
+scale = Vector2(0.5, 0.5)
+stats = NodePath("../Stats")
+avatar_texture = SubResource("AtlasTexture_dw050")
 
 [connection signal="hurt" from="Graphics/HurtBox" to="." method="_on_hurt_box_hurt"]

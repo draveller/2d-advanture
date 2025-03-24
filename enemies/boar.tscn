@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://d3ctlfpahxnaq"]
+[gd_scene load_steps=17 format=3 uid="uid://d3ctlfpahxnaq"]
 
 [ext_resource type="PackedScene" uid="uid://dgt8vlxn8q7on" path="res://enemies/enemy.tscn" id="1_7qeyt"]
 [ext_resource type="Script" uid="uid://c6c804nuq5mx7" path="res://enemies/boar.gd" id="2_iippf"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://dxq21sgrnx58m" path="res://assets/legacy_fantacy/Boar/Hit-Sheet.png" id="3_iippf"]
 [ext_resource type="Texture2D" uid="uid://c332fyh01ny34" path="res://assets/legacy_fantacy/Boar/Run-Sheet.png" id="4_qb4tn"]
 [ext_resource type="Texture2D" uid="uid://dgbil8qxmp0yo" path="res://assets/legacy_fantacy/Boar/Walk-Base-Sheet.png" id="5_kdngy"]
+[ext_resource type="PackedScene" uid="uid://nm3s27f1ukf4" path="res://ui/StatusPanel.tscn" id="7_qb4tn"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7n1f8"]
 size = Vector2(25, 21)
@@ -569,6 +570,10 @@ _data = {
 &"walk": SubResource("Animation_gjd1u")
 }
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_qb4tn"]
+atlas = ExtResource("2_imo2m")
+region = Rect2(4, 10, 22, 22)
+
 [node name="Boar" instance=ExtResource("1_7qeyt")]
 script = ExtResource("2_iippf")
 
@@ -611,5 +616,14 @@ one_shot = true
 
 [node name="Stats" parent="." index="5"]
 max_health = 5
+
+[node name="StatusPanel" parent="." index="6" node_paths=PackedStringArray("stats") instance=ExtResource("7_qb4tn")]
+offset_left = -22.0
+offset_top = -43.0
+offset_right = 66.0
+offset_bottom = -17.0
+scale = Vector2(0.5, 0.5)
+stats = NodePath("../Stats")
+avatar_texture = SubResource("AtlasTexture_qb4tn")
 
 [connection signal="hurt" from="Graphics/HurtBox" to="." method="_on_hurt_box_hurt"]

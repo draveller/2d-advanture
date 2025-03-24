@@ -13,7 +13,7 @@ enum Direction {
             await ready
         graphics.scale.x = - direction
 
-@export var max_speed := 180.0
+@export var max_speed := 150.0
 @export var acceleration := 2000.0
 
 
