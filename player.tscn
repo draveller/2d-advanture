@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://bhsnw37cd2xk"]
+[gd_scene load_steps=34 format=3 uid="uid://bhsnw37cd2xk"]
 
 [ext_resource type="Script" uid="uid://cdw01jrdbsh28" path="res://player.gd" id="1_onrkg"]
 [ext_resource type="Texture2D" uid="uid://7uap7wyn8d4n" path="res://assets/generic_char/char_blue_1.png" id="2_i3pqv"]
@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://dgf33c1abya6x" path="res://assets/generic_char/char_blue_2.png" id="4_hqtel"]
 [ext_resource type="Script" uid="uid://dg755hi510eq" path="res://classes/Stats.gd" id="7_1jxqw"]
 [ext_resource type="PackedScene" uid="uid://nm3s27f1ukf4" path="res://ui/StatusPanel.tscn" id="8_dw050"]
+[ext_resource type="Texture2D" uid="uid://bmgr2xxttyupe" path="res://assets/ui/gdb-keyboard-2.png" id="9_b26j0"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1jxqw"]
 size = Vector2(29.75, 16)
@@ -1846,6 +1847,42 @@ _data = {
 atlas = ExtResource("2_i3pqv")
 region = Rect2(22, 24, 11, 11)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_n7ghd"]
+atlas = ExtResource("9_b26j0")
+region = Rect2(96, 48, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nvl01"]
+atlas = ExtResource("9_b26j0")
+region = Rect2(96, 160, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ivps1"]
+atlas = ExtResource("9_b26j0")
+region = Rect2(96, 272, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_urp6f"]
+atlas = ExtResource("9_b26j0")
+region = Rect2(96, 384, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_dw050"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_n7ghd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nvl01")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ivps1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_urp6f")
+}],
+"loop": true,
+"name": &"default",
+"speed": 6.0
+}]
+
 [node name="Player" type="CharacterBody2D"]
 collision_layer = 2
 script = ExtResource("1_onrkg")
@@ -1898,9 +1935,6 @@ metadata/_custom_type_script = "uid://uauwminoh8qj"
 position = Vector2(-1, -14.5)
 shape = SubResource("RectangleShape2D_2hs0m")
 
-[node name="StateMachine" type="Node" parent="."]
-script = ExtResource("3_state")
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-1, -14.5)
 shape = SubResource("RectangleShape2D_hqtel")
@@ -1927,6 +1961,9 @@ metadata/_custom_type_script = "uid://dg755hi510eq"
 wait_time = 2.0
 one_shot = true
 
+[node name="StateMachine" type="Node" parent="."]
+script = ExtResource("3_state")
+
 [node name="StatusPanel" parent="." node_paths=PackedStringArray("stats") instance=ExtResource("8_dw050")]
 offset_left = -22.0
 offset_top = -52.0
@@ -1935,5 +1972,12 @@ offset_bottom = -26.0
 scale = Vector2(0.5, 0.5)
 stats = NodePath("../Stats")
 avatar_texture = SubResource("AtlasTexture_dw050")
+
+[node name="InteractionIcon" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -37)
+scale = Vector2(0.6, 0.6)
+sprite_frames = SubResource("SpriteFrames_dw050")
+autoplay = "default"
+frame_progress = 0.767901
 
 [connection signal="hurt" from="Graphics/HurtBox" to="." method="_on_hurt_box_hurt"]

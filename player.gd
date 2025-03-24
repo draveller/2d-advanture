@@ -8,6 +8,8 @@ var default_gravity := ProjectSettings.get("physics/2d/default_gravity") as floa
 var is_combo_reqested := false
 var pending_damage: Damage
 const KNOCKBACK_AMOUNT: float = 500.0
+var interact_with: Array[Interactable]
+
 
 @onready var graphics: Node2D = $Graphics
 @onready var animation_player = $AnimationPlayer
@@ -18,6 +20,7 @@ const KNOCKBACK_AMOUNT: float = 500.0
 @onready var state_machine: Node = $StateMachine
 @onready var stats: Stats = $Stats
 @onready var invincible_timer: Timer = $InvincibleTimer
+@onready var interaction_icon: AnimatedSprite2D = $InteractionIcon
 
 enum State {
     IDLE,
@@ -51,8 +54,13 @@ func _unhandled_input(event: InputEvent) -> void:
             velocity.y = JUMP_VELOCITY / 2.0
     if event.is_action_pressed("attack") and can_combo:
         is_combo_reqested = true
+    if event.is_action_pressed("interact") and interact_with:
+        interact_with.back().interact(self)
+
 
 func tick_physics(state: State, delta: float) -> void:
+    interaction_icon.visible = not interact_with.is_empty()
+
     if invincible_timer.time_left > 0:
         graphics.modulate.a = sin(Time.get_ticks_msec() / 20) * 0.5 + 0.5
     else:
@@ -100,6 +108,17 @@ func stand(gravity: float, delta: float) -> void:
     velocity.x = move_toward(velocity.x, 0.0, acceleration * delta)
     velocity.y += gravity * delta
     move_and_slide()
+
+
+func register_interactable(v: Interactable) -> void:
+    if state_machine.current_state == State.DYING:
+        return
+    if v in interact_with:
+        return
+    interact_with.append(v)
+
+func unregister_interactable(v: Interactable) -> void:
+    interact_with.erase(v)
 
 
 func get_next_state(state: State) -> int:
@@ -216,6 +235,7 @@ func transition_state(from: State, to: State) -> void:
         State.DYING:
             animation_player.play("die")
             invincible_timer.stop()
+            interact_with.clear()
 
     if to == State.WALL_JUMP:
         Engine.time_scale = 0.6

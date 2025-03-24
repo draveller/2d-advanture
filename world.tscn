@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://de4esiyrdy2i8"]
+[gd_scene load_steps=12 format=3 uid="uid://de4esiyrdy2i8"]
 
 [ext_resource type="Texture2D" uid="uid://d01r74h30hq7b" path="res://assets/Trees/Tree-Assets.png" id="1_f3sb7"]
 [ext_resource type="Script" uid="uid://cgdajgppmkvqp" path="res://world.gd" id="1_tlwt5"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://7ypmi8aoeaex" path="res://assets/legacy_fantacy/BackGround/Background.png" id="4_aqk2v"]
 [ext_resource type="Texture2D" uid="uid://dic04ikw0pay1" path="res://assets/Trees/Background.png" id="5_036b0"]
 [ext_resource type="PackedScene" uid="uid://d3ctlfpahxnaq" path="res://enemies/boar.tscn" id="6_dwbse"]
+[ext_resource type="Script" uid="uid://c83iktrunsf68" path="res://classes/interactable.gd" id="7_pkg7o"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_fj7yv"]
 texture = ExtResource("1_f3sb7")
@@ -361,6 +362,12 @@ terrain_set_0/terrain_1/name = "Leaves"
 terrain_set_0/terrain_1/color = Color(0.5, 0.4375, 0.25, 1)
 sources/0 = SubResource("TileSetAtlasSource_fj7yv")
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gbfbk"]
+size = Vector2(11, 14)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pkg7o"]
+size = Vector2(11, 21)
+
 [node name="World" type="Node2D"]
 script = ExtResource("1_tlwt5")
 
@@ -549,3 +556,21 @@ region_rect = Rect2(210, 101, 124, 86)
 
 [node name="Boar" parent="." instance=ExtResource("6_dwbse")]
 position = Vector2(149, 137)
+
+[node name="Mushroom" type="Area2D" parent="."]
+position = Vector2(-8, 149)
+script = ExtResource("7_pkg7o")
+metadata/_custom_type_script = "uid://c83iktrunsf68"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Mushroom"]
+position = Vector2(-0.5, 3)
+shape = SubResource("RectangleShape2D_gbfbk")
+
+[node name="TallMushroom" type="Area2D" parent="."]
+position = Vector2(184, 149)
+script = ExtResource("7_pkg7o")
+metadata/_custom_type_script = "uid://c83iktrunsf68"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TallMushroom"]
+position = Vector2(-0.5, -0.5)
+shape = SubResource("RectangleShape2D_pkg7o")
