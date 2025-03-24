@@ -6,7 +6,8 @@ extends CharacterBody2D
 
 var default_gravity := ProjectSettings.get("physics/2d/default_gravity") as float
 var is_combo_reqested := false
-
+var pending_damage: Damage
+const KNOCKBACK_AMOUNT: float = 500.0
 
 @onready var graphics: Node2D = $Graphics
 @onready var animation_player = $AnimationPlayer
@@ -15,6 +16,8 @@ var is_combo_reqested := false
 @onready var hand_checker: RayCast2D = $Graphics/HandChecker
 @onready var foot_checker: RayCast2D = $Graphics/FootChecker
 @onready var state_machine: Node = $StateMachine
+@onready var stats: Stats = $Stats
+@onready var invincible_timer: Timer = $InvincibleTimer
 
 enum State {
     IDLE,
@@ -27,6 +30,8 @@ enum State {
     ATTACK_1,
     ATTACK_2,
     ATTACK_3,
+    HURT,
+    DYING,
 }
 
 const GROUND_STATES := [State.IDLE, State.RUNNING, State.LANDING, State.ATTACK_1, State.ATTACK_2, State.ATTACK_3]
@@ -48,6 +53,11 @@ func _unhandled_input(event: InputEvent) -> void:
         is_combo_reqested = true
 
 func tick_physics(state: State, delta: float) -> void:
+    if invincible_timer.time_left > 0:
+        graphics.modulate.a = sin(Time.get_ticks_msec() / 20) * 0.5 + 0.5
+    else:
+        graphics.modulate.a = 1
+
     match state:
         State.IDLE:
             move(default_gravity, delta)
@@ -70,6 +80,8 @@ func tick_physics(state: State, delta: float) -> void:
                 move(default_gravity, delta)
         State.ATTACK_1, State.ATTACK_2, State.ATTACK_3:
             stand(default_gravity, delta)
+        State.HURT, State.DYING:
+            stand(default_gravity, delta)
 
 func move(gravity: float, delta: float) -> void:
     var direction := Input.get_axis("move_left", "move_right")
@@ -91,6 +103,13 @@ func stand(gravity: float, delta: float) -> void:
 
 
 func get_next_state(state: State) -> int:
+    if stats.health <= 0:
+        return StateMachine.KEEP_CURRENT if state == State.DYING else State.DYING
+
+    if pending_damage:
+        return State.HURT
+
+
     var can_jump := is_on_floor() or coyote_timer.time_left > 0
     var should_jump := can_jump and jump_request_timer.time_left > 0
     if should_jump:
@@ -144,6 +163,9 @@ func get_next_state(state: State) -> int:
         State.ATTACK_3:
             if not animation_player.is_playing():
                 return State.IDLE
+        State.HURT:
+            if not animation_player.is_playing():
+                return State.IDLE
 
     return StateMachine.KEEP_CURRENT
 
@@ -184,8 +206,38 @@ func transition_state(from: State, to: State) -> void:
         State.ATTACK_3:
             animation_player.play("attack_3")
             is_combo_reqested = false
+        State.HURT:
+            animation_player.play("hurt")
+            stats.health -= pending_damage.amount
+            var dir := pending_damage.source.global_position.direction_to(global_position)
+            velocity = dir * KNOCKBACK_AMOUNT
+            pending_damage = null
+            invincible_timer.start()
+        State.DYING:
+            animation_player.play("die")
+            invincible_timer.stop()
 
     if to == State.WALL_JUMP:
         Engine.time_scale = 0.6
     if from == State.WALL_JUMP:
         Engine.time_scale = 1.0
+
+
+func die() -> void:
+    animation_player.animation_finished.connect(_on_die_animation_finished)
+
+func _on_die_animation_finished(anim_name: String) -> void:
+    if anim_name == "die":
+        animation_player.animation_finished.disconnect(_on_die_animation_finished)
+        await get_tree().create_timer(1.2).timeout
+        get_tree().reload_current_scene()
+
+func _on_hurt_box_hurt(hitbox: HitBox) -> void:
+    if invincible_timer.time_left > 0:
+        return
+
+    pending_damage = Damage.new()
+    pending_damage.amount = 1
+    pending_damage.source = hitbox.owner
+
+    stats.health -= 1
