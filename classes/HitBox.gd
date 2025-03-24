@@ -6,10 +6,10 @@ signal hit(hurtbox)
 
 
 func _init() -> void:
-	area_entered.connect(_on_area_entered)
+    area_entered.connect(_on_area_entered)
 
 
 func _on_area_entered(hurtbox: HurtBox) -> void:
-	print("[hit] %s => %s" % [owner.name, hurtbox.owner.name])
-	hit.emit(hurtbox)
-	hurtbox.hurt.emit(self)
+    print("[hit] %s => %s" % [owner.name, hurtbox.owner.name])
+    hit.emit(hurtbox)
+    hurtbox.hurt.emit(self)

@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://dgt8vlxn8q7on"]
+[gd_scene load_steps=7 format=3 uid="uid://dgt8vlxn8q7on"]
 
 [ext_resource type="Script" uid="uid://wpqt2fjxhi5q" path="res://enemies/enemy.gd" id="1_7frlh"]
 [ext_resource type="Script" uid="uid://lhvpoqalyrsm" path="res://classes/StateMachine.gd" id="1_fw1ev"]
 [ext_resource type="Script" uid="uid://chnw2dltcdjes" path="res://classes/HitBox.gd" id="2_orwns"]
 [ext_resource type="Script" uid="uid://uauwminoh8qj" path="res://classes/HurtBox.gd" id="3_a6vjd"]
+[ext_resource type="Script" uid="uid://dg755hi510eq" path="res://classes/Stats.gd" id="5_07tka"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_a6vjd"]
 size = Vector2(27, 21)
@@ -41,3 +42,7 @@ shape = SubResource("RectangleShape2D_a6vjd")
 [node name="StateMachine" type="Node" parent="."]
 script = ExtResource("1_fw1ev")
 metadata/_custom_type_script = "uid://lhvpoqalyrsm"
+
+[node name="Stats" type="Node" parent="."]
+script = ExtResource("5_07tka")
+metadata/_custom_type_script = "uid://dg755hi510eq"
