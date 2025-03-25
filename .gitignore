@@ -3,3 +3,8 @@
 /android/
 **/assets/
 **/temp/
+
+**/*.exe
+**/*.pck
+**/*.apk
+**/*.zip
